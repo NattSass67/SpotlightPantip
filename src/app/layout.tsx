@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-        <title>JackGT Pro</title>
+        <title>Pantip Home</title>
         <meta name="description" content="Your website description" />
         <body className="flex h-full bg-zinc-50 dark:bg-black">
           <Provider store={store}>

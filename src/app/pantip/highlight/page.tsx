@@ -45,7 +45,7 @@ interface Content {
 
 function Highlight() {
   const content: Content[] = useAppSelector(
-    (state) => state.mySession.pickPantip.data,
+    (state) => state.mySession.pickPantip?.data,
   )
   const formatDate = (isoString: string) => {
     const date = new Date(isoString)
@@ -68,7 +68,7 @@ function Highlight() {
           </p>
         </div>
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {content.map((post) => (
+          {content?.map((post) => (
             <article
               key={post.topic_id}
               className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-80 sm:pt-48 md:pt-80"
