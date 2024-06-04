@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import {
@@ -63,13 +64,16 @@ function SearchBar() {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState<Filter | null>(null)
+  const [trigger, setTrigger]=useState(false);
   const router = useRouter()
   useEffect(() => {
     const getFilter= async ()=>{
       const res= await getSerch(query);
       setFilterData(res);
     }
-    getFilter();
+    if(!trigger){
+      getFilter();
+    }
   }, [query])
 
   return (
@@ -135,11 +139,13 @@ function SearchBar() {
                       static
                       className="max-h-72 scroll-py-2 overflow-y-auto text-sm text-gray-800"
                     >
-                      {filterData?.data?.map((person,index) => (
+                      {!trigger && filterData?.data?.map((person,index) => (
                         <ComboboxOption
                           key={index}
                           value={person}
-                          onClick={()=>{setQuery(person.title);
+                          onClick={()=>{
+                            setTrigger(true);
+                            setQuery(person.title);
                             router.push(`https://pantip.com/search?q=${person.title}`)
                           }}
                           className="px-3 text-sm py-3 text-zinc-800 hover:bg-zinc-50"
