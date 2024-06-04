@@ -304,7 +304,7 @@ export async function getRoomRecommend() {
         id: 100,
         name: 'รวมมิตร',
         name_en: 'all',
-        slug: '',
+        slug: 'all',
         description: 'รวมกระทู้จากทุกห้อง',
         link_url: 'https://pantip.com/forum',
         room_icon_url: 'icon/25.png',
