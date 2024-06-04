@@ -334,7 +334,7 @@ export default function Home() {
           enterFrom="opacity-0"
           enterTo="opacity-100"
           leave="transition-opacity duration-150"
-          leaveFrom="opacity-100"
+          leaveFrom="opacity-0"
           leaveTo="opacity-0"
         >
           <div>
