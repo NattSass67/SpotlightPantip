@@ -82,6 +82,7 @@ function SearchBar() {
         className="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:bg-zinc-800/90 dark:ring-white/10 dark:hover:ring-white/20"
         onClick={() => {
           setOpen(true)
+          setQuery('')
         }}
       >
         <MagnifyingGlassIcon
@@ -123,19 +124,17 @@ function SearchBar() {
                         onChange={(event) => {setQuery(event.target.value);
                           console.log(query)
                         }}
-                        onBlur={() => {setQuery('')}}
+                        onBlur={() => {}}
                       />
-                      <button
-                        onClick={() => {
-                          router.push(`https://pantip.com/search?q=${query}`)
-                        }}
+                      <a
+                        href={`https://pantip.com/search?q=${query}`}
                         className="group my-2 rounded-full py-1.5 px-3 transition hover:scale-110 dark:bg-zinc-800/90 "
                       >
                         <MagnifyingGlassIcon
                           className="pointer-events-none h-5 w-5 text-zinc-500 group-hover:text-zinc-700"
                           aria-hidden="true"
                         />
-                      </button>
+                      </a>
                     </div>
                     <ComboboxOptions
                       static
