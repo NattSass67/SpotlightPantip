@@ -828,7 +828,7 @@ export async function getPantipHitz() {
   }
 }
 
-export async function getSerch() {
+export async function getSerch(query: string) {
   try {
     const response = await fetch(
       'https://pantip.com/api/search-service/search/query',
@@ -853,7 +853,7 @@ export async function getSerch() {
           Referer: 'https://pantip.com/search?q=how',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
         },
-        body: '{"keyword":"how","limit":8,"type":"all","show_btn_search":"false"}',
+        body: `{"keyword":"${query}","limit":8,"type":"all","show_btn_search":"false"}`,
         method: 'POST',
       },
     )

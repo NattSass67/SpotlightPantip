@@ -11,6 +11,8 @@ import {
 
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
+import { getSerch } from '@/services/request'
+
 import {
   Popover,
   PopoverButton,
@@ -30,6 +32,11 @@ import { useRouter } from 'next/navigation'
 import { Container } from '@/components/Container'
 import avatarImage from '@/images/pantip.png'
 
+const people = [
+  { id: 1, name: 'Leslie Alexander', url: '#' },
+  // More people...
+]
+
 function CloseIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -45,10 +52,26 @@ function CloseIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   )
 }
 
+interface Filter {
+  success: boolean
+  data: {
+    title: string
+  }[]
+}
+
 function SearchBar() {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
+  const [filterData, setFilterData] = useState<Filter | null>(null)
   const router = useRouter()
+  useEffect(() => {
+    const getFilter= async ()=>{
+      const res= await getSerch(query);
+      setFilterData(res);
+    }
+    getFilter();
+  }, [query])
+
   return (
     <>
       <button
@@ -84,27 +107,45 @@ function SearchBar() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="mx-auto mt-20 max-w-xl transform overflow-hidden rounded-full bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all md:mt-0 dark:bg-zinc-800/90">
+              <DialogPanel className="mx-auto mt-20 max-w-xl transform overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all md:mt-0 dark:bg-zinc-800/90">
                 <Combobox onChange={() => {}}>
-                  <div className="relative flex bg-white px-2 dark:bg-zinc-800/90">
-                    <ComboboxInput
-                      autoFocus
-                      className="flex w-full rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 focus:outline-none dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10"
-                      placeholder="Search..."
-                      onChange={(event) => setQuery(event.target.value)}
-                      onBlur={() => setQuery('')}
-                    />
-                    <button
-                      onClick={() => {
-                        router.push(`https://pantip.com/search?q=${query}`)
-                      }}
-                      className="group my-2 rounded-full p-1.5 transition hover:scale-110 dark:bg-zinc-800/90 "
-                    >
-                      <MagnifyingGlassIcon
-                        className="pointer-events-none h-5 w-5 text-zinc-500 group-hover:text-zinc-700"
-                        aria-hidden="true"
+                  <div className="relative flex flex-col bg-white dark:bg-zinc-800/90">
+                    <div className="flex w-full border border-b-zinc-200">
+                      <ComboboxInput
+                        autoFocus
+                        className="flex w-full rounded-full bg-white/90 pl-3 text-base text-zinc-800 focus:outline-none dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10"
+                        placeholder="Search..."
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        onBlur={() => setQuery('')}
                       />
-                    </button>
+                      <button
+                        onClick={() => {
+                          router.push(`https://pantip.com/search?q=${query}`)
+                        }}
+                        className="group my-2 rounded-full py-1.5 px-3 transition hover:scale-110 dark:bg-zinc-800/90 "
+                      >
+                        <MagnifyingGlassIcon
+                          className="pointer-events-none h-5 w-5 text-zinc-500 group-hover:text-zinc-700"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
+                    <ComboboxOptions
+                      static
+                      className="max-h-72 scroll-py-2 overflow-y-auto text-sm text-gray-800"
+                    >
+                      {filterData?.data?.map((person,index) => (
+                        <ComboboxOption
+                          key={index}
+                          value={person}
+                          onClick={()=>{setQuery(person.title)}}
+                          className="px-3 text-sm py-3 text-zinc-800 hover:bg-zinc-50"
+                        >
+                          {person.title}
+                        </ComboboxOption>
+                      ))}
+                    </ComboboxOptions>
                   </div>
                 </Combobox>
               </DialogPanel>
