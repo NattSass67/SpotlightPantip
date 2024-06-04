@@ -948,7 +948,7 @@ export async function getFilterByRoom(name: string) {
 export async function getNextPantipPick(id: string) {
   try {
     const response = await fetch(
-      `https://pantip.com/api/forum-service/home/get_pantip_pick?limit=20&id=bnVsbA%3D%3D&next_id=${id}`,
+      `https://pantip.com/api/forum-service/home/get_pantip_pick?limit=21&id=bnVsbA%3D%3D&next_id=${id}`,
       {
         headers: {
           accept: 'application/json, text/plain, */*',
@@ -987,7 +987,7 @@ export async function getNextPantipPick(id: string) {
 export async function getNextPantipHitz(id: string) {
   try {
     const response = await fetch(
-      `https://pantip.com/api/forum-service/home/get_pantip_now?limit=20&id=bnVsbA%3D%3D&next_id=${id}`,
+      `https://pantip.com/api/forum-service/home/get_pantip_now?limit=21&id=bnVsbA%3D%3D&next_id=${id}`,
       {
         headers: {
           accept: 'application/json, text/plain, */*',
@@ -1026,7 +1026,7 @@ export async function getNextPantipHitz(id: string) {
 export async function getNextRoomContent(room: string, id: string) {
   try {
     const response = await fetch(
-      `https://pantip.com/api/forum-service/forum/room_topic?room=${room}&limit=10&next_id=${id}`,
+      `https://pantip.com/api/forum-service/forum/room_topic?room=${room}&limit=21&next_id=${id}`,
       {
         headers: {
           accept: 'application/json, text/plain, */*',

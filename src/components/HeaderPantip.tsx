@@ -139,7 +139,9 @@ function SearchBar() {
                         <ComboboxOption
                           key={index}
                           value={person}
-                          onClick={()=>{setQuery(person.title)}}
+                          onClick={()=>{setQuery(person.title);
+                            router.push(`https://pantip.com/search?q=${person.title}`)
+                          }}
                           className="px-3 text-sm py-3 text-zinc-800 hover:bg-zinc-50"
                         >
                           {person.title}

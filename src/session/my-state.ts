@@ -36,6 +36,8 @@ import {
   appendHitzContent,
   appendPickContent,
   appendRoomContent,
+  fetchSecondStart,
+  fetchSecondSuccess
 } from './sessionReducers'
 
 export const fetchContent = () => {
@@ -113,10 +115,10 @@ export const getDataRoomChoosen = (room: string) => {
 
 export const fetchMoreRoomContent = (room: string) => {
   return async (dispatch: any, state: any) => {
-    dispatch(fetchStart()) // Dispatch loginStart action to set loading state
+    dispatch(fetchSecondStart()) // Dispatch loginStart action to set loading state
     try {
       if (room === '') {
-        dispatch(fetchSuccess())
+        dispatch(fetchSecondSuccess())
         return
       }
       const res = await getNextRoomContent(
@@ -124,52 +126,52 @@ export const fetchMoreRoomContent = (room: string) => {
         state().mySession.highlightContent.next_id,
       )
 
-      dispatch(appendRoomContent(res))
       setTimeout(async () => {
-        dispatch(fetchSuccess())
+        dispatch(appendRoomContent(res))
+        dispatch(fetchSecondSuccess())
         // Set success after 2000 milliseconds
       }, 2000)
     } catch (error) {
-      dispatch(fetchSuccess()) // Dispatch loginFailure action if login encounters an error
+      dispatch(fetchSecondSuccess()) // Dispatch loginFailure action if login encounters an error
     }
   }
 }
 
 export const fetchMorePickContent = () => {
   return async (dispatch: any, state: any) => {
-    dispatch(fetchStart()) // Dispatch loginStart action to set loading state
+    dispatch(fetchSecondStart()) // Dispatch loginStart action to set loading state
     try {
       const res = await getNextPantipPick(
         state().mySession.highlightContent.next_id,
       )
 
-      dispatch(appendPickContent(res))
       setTimeout(async () => {
-        dispatch(fetchSuccess())
+        dispatch(appendPickContent(res))
+        dispatch(fetchSecondSuccess())
         // Set success after 2000 milliseconds
       }, 2000)
     } catch (error) {
-      dispatch(fetchSuccess()) // Dispatch loginFailure action if login encounters an error
+      dispatch(fetchSecondSuccess()) // Dispatch loginFailure action if login encounters an error
     }
   }
 }
 
 export const fetchMoreHitzContent = () => {
   return async (dispatch: any, state: any) => {
-    dispatch(fetchStart()) // Dispatch loginStart action to set loading state
+    dispatch(fetchSecondStart()) // Dispatch loginStart action to set loading state
     try {
      
       const res = await getNextPantipHitz(
         state().mySession.hitzPantip.next_id,
       )
 
-      dispatch(appendHitzContent(res))
       setTimeout(async () => {
-        dispatch(fetchSuccess())
+        dispatch(appendHitzContent(res))
+        dispatch(fetchSecondSuccess())
         // Set success after 2000 milliseconds
       }, 2000)
     } catch (error) {
-      dispatch(fetchSuccess()) // Dispatch loginFailure action if login encounters an error
+      dispatch(fetchSecondSuccess()) // Dispatch loginFailure action if login encounters an error
     }
   }
 }

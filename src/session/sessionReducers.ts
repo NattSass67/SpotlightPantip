@@ -15,6 +15,7 @@ interface SessionState {
   roomChoosen: string
   reachTop: boolean
   loading: boolean // Add loading state to track API request status
+  secondaryLoading: boolean
 }
 
 const initialState: SessionState = {
@@ -32,6 +33,7 @@ const initialState: SessionState = {
   tagChoosen: '',
   reachTop: true,
   loading: false, // Initialize loading state
+  secondaryLoading: false,
 }
 
 /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }] */
@@ -44,6 +46,12 @@ const sessionSlice = createSlice({
     },
     fetchSuccess(state) {
       state.loading = false // Set loading state to false when login succeeds
+    },
+    fetchSecondStart(state) {
+      state.secondaryLoading = true // Set loading state to true when login starts
+    },
+    fetchSecondSuccess(state) {
+      state.secondaryLoading = false // Set loading state to false when login succeeds
     },
     fetchRoomRecommend(state, action) {
       state.roomRecommend = action.payload
@@ -117,7 +125,9 @@ export const {
   setRoomChoosen,
   appendHitzContent,
   appendPickContent,
-  appendRoomContent
+  appendRoomContent,
+  fetchSecondStart,
+  fetchSecondSuccess
 } = sessionSlice.actions
 
 export default sessionSlice.reducer

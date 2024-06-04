@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { Container } from '@/components/Container'
-
+import { Transition } from '@headlessui/react'
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
@@ -10,6 +10,8 @@ import { setRoomChoosen } from '@/session/sessionReducers'
 import { fetchContent, fetchMoreRoomContent } from '@/session/my-state'
 import avatarImage from '@/images/profile.png'
 import { useAppDispatch, useAppSelector } from '@/session/store'
+import { Fragment } from 'react'
+import { useState } from 'react'
 
 let description: string =
   'คอมมือใหม่ อินเทอร์เน็ต ซอฟต์แวร์ ฮาร์ดแวร์ เกม เขียนโปรแกรม Gadget'
@@ -28,6 +30,18 @@ interface Content {
   author: { slug: string; name: string; avatar: { medium: string } }
 }
 
+function Loader() {
+  return (
+    <>
+      <div className="flex items-center justify-center space-x-2 py-4">
+        <div className="h-4 w-4 animate-pulse rounded-full bg-zinc-600"></div>
+        <div className="h-4 w-4 animate-pulse rounded-full bg-zinc-600"></div>
+        <div className="h-4 w-4 animate-pulse rounded-full bg-zinc-600"></div>
+      </div>
+    </>
+  )
+}
+
 function RoomContent() {
   const content: Content[] = useAppSelector(
     (state) => state.mySession.highlightContent.data,
@@ -43,7 +57,7 @@ function RoomContent() {
   }
 
   return (
-    <div className="bg-white py-16">
+    <div className="bg-white pt-16">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -254,10 +268,10 @@ function RoomSelect() {
 }
 
 function Button() {
-  const dispatch = useAppDispatch();
-  const choosedRoom = useAppSelector((state) => state.mySession.roomChoosen);
-  const action = ()=>{
-    dispatch(fetchMoreRoomContent(choosedRoom));
+  const dispatch = useAppDispatch()
+  const choosedRoom = useAppSelector((state) => state.mySession.roomChoosen)
+  const action = () => {
+    dispatch(fetchMoreRoomContent(choosedRoom))
   }
   return (
     <button
@@ -272,6 +286,10 @@ function Button() {
 
 export default function Home() {
   const dispatch = useAppDispatch()
+  const isLoading = useAppSelector((state) => state.mySession.loading)
+  const isSecondaryLoading = useAppSelector(
+    (state) => state.mySession.secondaryLoading,
+  )
   useEffect(() => {
     dispatch(fetchContent())
     description =
@@ -279,15 +297,53 @@ export default function Home() {
     console.log('trigger')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const [initLoading, setInitLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitLoading(false)
+    }, 500) // Set the delay to 1 second
+
+    // Cleanup the timer on component unmount
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (initLoading) {
+    return (
+      <Container className="mt-4">
+        <></>
+      </Container>
+    )
+  }
   return (
     <Container className="mt-4">
       <div className="bg-white pt-16">
         {' '}
         <RoomSelect />
-        <RoomContent />
-        <div className="flex flex-row justify-center pt-20">
-          <Button />
-        </div>
+        {isLoading ? (
+          <div className="z-50 pt-32">
+            <Loader />
+          </div>
+        ) : (
+          <></>
+        )}
+        <Transition
+          show={!isLoading}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div>
+            <RoomContent />
+            <div className="flex flex-row justify-center pt-28">
+              {isSecondaryLoading ? <Loader /> : <Button />}
+            </div>
+          </div>
+        </Transition>
       </div>
     </Container>
   )
