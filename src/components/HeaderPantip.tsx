@@ -89,7 +89,7 @@ function SearchBar() {
           aria-hidden="true"
         />
       </button>
-      <Transition show={open} afterLeave={() => setQuery('')} appear>
+      <Transition show={open} afterLeave={() => {}} appear>
         <Dialog className="relative z-50" onClose={setOpen}>
           <TransitionChild
             enter="ease-out duration-300"
@@ -115,13 +115,15 @@ function SearchBar() {
                 <Combobox onChange={() => {}}>
                   <div className="relative flex flex-col bg-white dark:bg-zinc-800/90">
                     <div className="flex w-full border border-b-zinc-200">
-                      <ComboboxInput
+                      <input
                         autoFocus
                         className="flex w-full rounded-full bg-white/90 pl-3 text-base text-zinc-800 focus:outline-none dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10"
                         placeholder="Search..."
                         value={query}
-                        onChange={(event) => setQuery(event.target.value)}
-                        onBlur={() => setQuery('')}
+                        onChange={(event) => {setQuery(event.target.value);
+                          console.log(query)
+                        }}
+                        onBlur={() => {setQuery('')}}
                       />
                       <button
                         onClick={() => {
