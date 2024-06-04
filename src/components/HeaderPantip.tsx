@@ -64,15 +64,15 @@ function SearchBar() {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState<Filter | null>(null)
-  const [trigger, setTrigger]=useState(false);
+  const [trigger, setTrigger] = useState(false)
   const router = useRouter()
   useEffect(() => {
-    const getFilter= async ()=>{
-      const res= await getSerch(query);
-      setFilterData(res);
+    const getFilter = async () => {
+      const res = await getSerch(query)
+      setFilterData(res)
     }
-    if(!trigger){
-      getFilter();
+    if (!trigger) {
+      getFilter()
     }
   }, [query])
 
@@ -121,14 +121,14 @@ function SearchBar() {
                         className="flex w-full rounded-full bg-white/90 pl-3 text-base text-zinc-800 focus:outline-none dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10"
                         placeholder="Search..."
                         value={query}
-                        onChange={(event) => {setQuery(event.target.value);
-                          console.log(query)
+                        onChange={(event) => {
+                          setQuery(event.target.value)
                         }}
                         onBlur={() => {}}
                       />
                       <a
                         href={`https://pantip.com/search?q=${query}`}
-                        className="group my-2 rounded-full py-1.5 px-3 transition hover:scale-110 dark:bg-zinc-800/90 "
+                        className="group my-2 rounded-full px-3 py-1.5 transition hover:scale-110 dark:bg-zinc-800/90 "
                       >
                         <MagnifyingGlassIcon
                           className="pointer-events-none h-5 w-5 text-zinc-500 group-hover:text-zinc-700"
@@ -140,20 +140,23 @@ function SearchBar() {
                       static
                       className="max-h-72 scroll-py-2 overflow-y-auto text-sm text-gray-800"
                     >
-                      {!trigger && filterData?.data?.map((person,index) => (
-                        <ComboboxOption
-                          key={index}
-                          value={person}
-                          onClick={()=>{
-                            setTrigger(true);
-                            setQuery(person.title);
-                            router.push(`https://pantip.com/search?q=${person.title}`)
-                          }}
-                          className="px-3 text-sm py-3 text-zinc-800 hover:bg-zinc-50"
-                        >
-                          {person.title}
-                        </ComboboxOption>
-                      ))}
+                      {!trigger &&
+                        filterData?.data?.map((person, index) => (
+                          <ComboboxOption
+                            key={index}
+                            value={person}
+                            onClick={() => {
+                              setTrigger(true)
+                              setQuery(person.title)
+                              router.push(
+                                `https://pantip.com/search?q=${person.title}`,
+                              )
+                            }}
+                            className="px-3 py-3 text-sm text-zinc-800 hover:bg-zinc-50"
+                          >
+                            {person.title}
+                          </ComboboxOption>
+                        ))}
                     </ComboboxOptions>
                   </div>
                 </Combobox>
