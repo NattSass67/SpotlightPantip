@@ -7,10 +7,12 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { getDataRoomChoosen } from '@/session/my-state'
 import { setRoomChoosen } from '@/session/sessionReducers'
+import { fetchContent, fetchMoreRoomContent } from '@/session/my-state'
 import avatarImage from '@/images/profile.png'
 import { useAppDispatch, useAppSelector } from '@/session/store'
 
-let description: string = 'คอมมือใหม่ อินเทอร์เน็ต ซอฟต์แวร์ ฮาร์ดแวร์ เกม เขียนโปรแกรม Gadget'
+let description: string =
+  'คอมมือใหม่ อินเทอร์เน็ต ซอฟต์แวร์ ฮาร์ดแวร์ เกม เขียนโปรแกรม Gadget'
 
 interface Content {
   comments_count: number
@@ -28,7 +30,7 @@ interface Content {
 
 function RoomContent() {
   const content: Content[] = useAppSelector(
-    (state) => state.mySession.highlightContent,
+    (state) => state.mySession.highlightContent.data,
   )
   const selectedRoom = useAppSelector((state) => state.mySession.roomChoosen)
   const formatDate = (isoString: string) => {
@@ -47,12 +49,10 @@ function RoomContent() {
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             {capitalizeFirstLetter(selectedRoom)}
           </h2>
-          <p className="mt-2 text-lg leading-8 text-gray-600">
-            {description}
-          </p>
+          <p className="mt-2 text-lg leading-8 text-gray-600">{description}</p>
         </div>
-        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {content.map((post) => (
+        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+          {content?.map((post) => (
             <article
               key={post.topic_id}
               className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-80 sm:pt-48 md:pt-80"
@@ -179,7 +179,7 @@ function RoomSelect() {
     <>
       {' '}
       <div className="relative mt-4 flex flex-col">
-        <div className="absolute left-0 md:left-6 top-0 z-10 h-12 w-12 bg-gradient-to-r from-white">
+        <div className="absolute left-0 top-0 z-10 h-12 w-12 bg-gradient-to-r from-white md:left-6">
           {' '}
         </div>
         <button
@@ -212,12 +212,12 @@ function RoomSelect() {
 
         <div
           ref={scrollContainerRef}
-          className="no-scrollbar md:mx-8 mx-0 px-4 flex flex-row gap-x-2 overflow-x-auto "
+          className="no-scrollbar mx-0 flex flex-row gap-x-2 overflow-x-auto px-4 md:mx-8 "
         >
           {roomList}
         </div>
 
-        <div className="absolute right-0 md:right-6 top-0 z-10 h-20 w-12 bg-gradient-to-l from-white">
+        <div className="absolute right-0 top-0 z-10 h-20 w-12 bg-gradient-to-l from-white md:right-6">
           {' '}
         </div>
         <button
@@ -253,13 +253,41 @@ function RoomSelect() {
   )
 }
 
+function Button() {
+  const dispatch = useAppDispatch();
+  const choosedRoom = useAppSelector((state) => state.mySession.roomChoosen);
+  const action = ()=>{
+    dispatch(fetchMoreRoomContent(choosedRoom));
+  }
+  return (
+    <button
+      type="button"
+      onClick={action}
+      className="rounded-lg bg-zinc-800 px-4 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-zinc-900"
+    >
+      Load more
+    </button>
+  )
+}
+
 export default function Home() {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchContent())
+    description =
+      'คอมมือใหม่ อินเทอร์เน็ต ซอฟต์แวร์ ฮาร์ดแวร์ เกม เขียนโปรแกรม Gadget'
+    console.log('trigger')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <Container className="mt-4">
       <div className="bg-white pt-16">
         {' '}
         <RoomSelect />
         <RoomContent />
+        <div className="flex flex-row justify-center pt-20">
+          <Button />
+        </div>
       </div>
     </Container>
   )

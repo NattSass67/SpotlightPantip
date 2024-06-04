@@ -4,6 +4,9 @@ import { Container } from '@/components/Container'
 import { useAppSelector } from '@/session/store'
 import avatarImage from '@/images/profile.png'
 import Image from 'next/image'
+import { useAppDispatch } from '@/session/store'
+import { fetchContent, fetchMoreHitzContent } from '@/session/my-state'
+import { useEffect } from 'react'
 
 const posts = [
   {
@@ -66,13 +69,13 @@ function Trends() {
             กระทู้ฮิตติดเทรนด์ทุก 10 นาที
           </p>
         </div>
-        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 md:grid-cols-2 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {content?.map((post) => (
             <article
               key={post.topic_id}
               className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-80 sm:pt-48 md:pt-80"
             >
-             <img
+              <img
                 src={
                   post.thumbnail_url
                     ? post.thumbnail_url
@@ -123,11 +126,36 @@ function Trends() {
           ))}
         </div>
       </div>
+      <div className="flex flex-row justify-center pt-20">
+        <Button />
+      </div>
     </div>
   )
 }
 
+function Button() {
+  const dispatch = useAppDispatch();
+  const action = ()=>{
+    dispatch(fetchMoreHitzContent());
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={action}
+      className="rounded-lg bg-zinc-800 px-4 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-zinc-900"
+    >
+      Load more
+    </button>
+  )
+}
+
 export default function Home() {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchContent())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <Container className="mt-4">
       <Trends />

@@ -5,6 +5,9 @@ import { useAppSelector } from '@/session/store'
 import avatarImage from '@/images/profile.png'
 import sampleImage from '@/images/sample.jpg'
 import Image from 'next/image'
+import { useAppDispatch } from '@/session/store'
+import { fetchContent, fetchMorePickContent } from '@/session/my-state'
+import { useEffect } from 'react'
 
 const posts = [
   {
@@ -67,7 +70,7 @@ function Highlight() {
             กระทู้คุณภาพคัดเลือกโดยทีมงาน Pantip
           </p>
         </div>
-        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {content?.map((post) => (
             <article
               key={post.topic_id}
@@ -124,11 +127,35 @@ function Highlight() {
           ))}
         </div>
       </div>
+      <div className="flex flex-row justify-center pt-20">
+        <Button />
+      </div>
     </div>
   )
 }
 
+function Button() {
+  const dispatch = useAppDispatch();
+  const action = ()=>{
+    dispatch(fetchMorePickContent());
+  }
+  return (
+    <button
+      type="button"
+      onClick={action}
+      className="rounded-lg bg-zinc-800 px-4 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-zinc-900"
+    >
+      Load more
+    </button>
+  )
+}
+
 export default function Home() {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchContent())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <Container className="mt-4">
       <Highlight />
