@@ -1,7 +1,6 @@
 'use client'
 
 import { Providers } from '@/app/providers'
-import { Layout } from '@/components/Layout'
 import { PantipLayout } from '@/components/PantipLayout'
 import { store } from '@/session/store'
 import { persistor } from '@/session/store'
@@ -15,6 +14,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <>
       <html lang="en" className="h-full antialiased" suppressHydrationWarning>
